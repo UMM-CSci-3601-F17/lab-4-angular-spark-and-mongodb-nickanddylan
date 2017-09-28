@@ -114,8 +114,8 @@ public class TodoControllerSpec {
             .map(TodoControllerSpec::getOwner)
             .sorted()
             .collect(Collectors.toList());
-        List<String> expectedNames = Arrays.asList("Sarah", "Amy");
-        assertEquals("Names should match", expectedNames, names);
+        List<String> expectedOwners = Arrays.asList("Sarah", "Amy");
+        assertEquals("Owners should match", expectedOwners, names);
     }
 
     @Test

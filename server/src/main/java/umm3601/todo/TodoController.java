@@ -107,10 +107,23 @@ public class TodoController {
             String targetOwner = queryParams.get("owner")[0];
             filterDoc = filterDoc.append("owner", targetOwner);
         }
+        if (queryParams.containsKey("status")) {
+            String targetStatus = queryParams.get("status")[0];
+            if (targetStatus.equals("complete")){
+                filterDoc = filterDoc.append("status", true);
+            }
+            else if (targetStatus.equals("incomplete")){
+                filterDoc = filterDoc.append("status", false);
+            }
+        }
         if (queryParams.containsKey("category")) {
             String targetCategory = queryParams.get("category")[0];
             filterDoc = filterDoc.append("category", targetCategory);
         }
+        /*if (queryParams.containsKey("category")) {
+            String targetCategory = queryParams.get("category")[0];
+            filterDoc = filterDoc.append("category", targetCategory);
+        }*/
 
         //FindIterable comes from mongo, Document comes from Gson
         FindIterable<Document> matchingTodos = todoCollection.find(filterDoc);
