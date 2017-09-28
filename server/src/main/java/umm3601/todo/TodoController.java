@@ -102,10 +102,11 @@ public class TodoController {
     public String getTodos(Map<String, String[]> queryParams) {
 
         Document filterDoc = new Document();
-
+        FindIterable<Document> matchingTodos = todoCollection.find(filterDoc);
         if (queryParams.containsKey("owner")) {
             String targetOwner = queryParams.get("owner")[0];
             filterDoc = filterDoc.append("owner", targetOwner);
+            matchingTodos = todoCollection.find(filterDoc);
         }
         if (queryParams.containsKey("status")) {
             String targetStatus = queryParams.get("status")[0];
@@ -115,18 +116,22 @@ public class TodoController {
             else if (targetStatus.equals("incomplete")){
                 filterDoc = filterDoc.append("status", false);
             }
+            matchingTodos = todoCollection.find(filterDoc);
         }
         if (queryParams.containsKey("category")) {
             String targetCategory = queryParams.get("category")[0];
             filterDoc = filterDoc.append("category", targetCategory);
+             matchingTodos = todoCollection.find(filterDoc);
         }
-        /*if (queryParams.containsKey("category")) {
-            String targetCategory = queryParams.get("category")[0];
-            filterDoc = filterDoc.append("category", targetCategory);
-        }*/
+        if (queryParams.containsKey("body")) {
+            String targetBody = queryParams.get("body")[0];
+            filterDoc = filterDoc.append("body", targetBody);
+
+            matchingTodos = todoCollection.find(filterDoc);
+        }
 
         //FindIterable comes from mongo, Document comes from Gson
-        FindIterable<Document> matchingTodos = todoCollection.find(filterDoc);
+        //FindIterable<Document> matchingTodos = todoCollection.find(filterDoc);
 
         return JSON.serialize(matchingTodos);
     }
@@ -137,6 +142,7 @@ public class TodoController {
      * @param res
      * @return
      */
+
     public boolean addNewTodo(Request req, Response res)
     {
 
@@ -147,10 +153,8 @@ public class TodoController {
             {
                 try {
                     BasicDBObject dbO = (BasicDBObject) o;
-
+                    
                     String owner = dbO.getString("owner");
-                    //For some reason age is a string right now, caused by angular.
-                    //This is a problem and should not be this way but here ya go
                     boolean status = dbO.getBoolean("status");
                     String body = dbO.getString("body");
                     String category = dbO.getString("category");
