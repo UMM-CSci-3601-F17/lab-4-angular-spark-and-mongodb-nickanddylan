@@ -5,6 +5,7 @@ import {UserListService} from "./user-list.service";
 import {Observable} from "rxjs";
 import {FormsModule} from "@angular/forms"; //for [(ngModule)] to not break tests
 
+
 describe("User list", () => {
 
     let userList: UserListComponent;
@@ -77,6 +78,40 @@ describe("User list", () => {
 
     it("has two users that are 37 years old", () => {
         expect(userList.users.filter((user: User) => user.age === 37).length).toBe(2);
+    });
+
+    it("user list filters by name", () => {
+        expect(userList.filteredUsers.length).toBe(3);
+        userList.userName = "a";
+        let a : Observable<User[]> = userList.refreshUsers();
+        a.do(x => Observable.of(x))
+            .subscribe(x =>
+            {
+                expect(userList.filteredUsers.length).toBe(2);
+            });
+    });
+
+    it("user list filters by age", () => {
+        expect(userList.filteredUsers.length).toBe(3);
+        userList.userAge = 37;
+        let a : Observable<User[]> = userList.refreshUsers();
+        a.do(x => Observable.of(x))
+            .subscribe(x =>
+            {
+                expect(userList.filteredUsers.length).toBe(2);
+            });
+    });
+
+    it("user list filters by name and age", () => {
+        expect(userList.filteredUsers.length).toBe(3);
+        userList.userAge = 37;
+        userList.userName = "i";
+        let a : Observable<User[]> = userList.refreshUsers();
+        a.do(x => Observable.of(x))
+            .subscribe(x =>
+            {
+                expect(userList.filteredUsers.length).toBe(1);
+            });
     });
 
 });
