@@ -5,12 +5,17 @@ import com.mongodb.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Indexes;
+import com.mongodb.client.model.Projections;
 import com.mongodb.util.JSON;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import spark.Request;
 import spark.Response;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,6 +32,7 @@ public class TodoController {
         gson = new Gson();
         this.database = database;
         todoCollection = database.getCollection("todos");
+        todoCollection.createIndex(Indexes.text("body"));
     }
 
     /**
@@ -102,7 +108,7 @@ public class TodoController {
     public String getTodos(Map<String, String[]> queryParams) {
 
         Document filterDoc = new Document();
-        FindIterable<Document> matchingTodos = todoCollection.find(filterDoc);
+        Iterable<Document> matchingTodos = todoCollection.find(filterDoc);
         if (queryParams.containsKey("owner")) {
             String targetOwner = queryParams.get("owner")[0];
             filterDoc = filterDoc.append("owner", targetOwner);
@@ -127,7 +133,17 @@ public class TodoController {
             String targetBody = queryParams.get("body")[0];
             filterDoc = filterDoc.append("body", targetBody);
 
-            matchingTodos = todoCollection.find(filterDoc);
+            System.err.println("The target string is <" + targetBody + ">");
+
+
+            matchingTodos = todoCollection.aggregate(
+                Arrays.asList(
+                    Aggregates.match(
+                        Filters.text(targetBody)
+                    )
+                )
+            );
+            // matchingTodos = todoCollection.find();
         }
 
         //FindIterable comes from mongo, Document comes from Gson
@@ -153,7 +169,7 @@ public class TodoController {
             {
                 try {
                     BasicDBObject dbO = (BasicDBObject) o;
-                    
+
                     String owner = dbO.getString("owner");
                     boolean status = dbO.getBoolean("status");
                     String body = dbO.getString("body");
