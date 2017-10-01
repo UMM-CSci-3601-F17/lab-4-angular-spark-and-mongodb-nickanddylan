@@ -10,7 +10,7 @@ import {environment} from "../../environments/environment";
 
 @Injectable()
 export class TodoListService {
-    private todoUrl: string = environment.API_URL + "todo";
+    private todoUrl: string = environment.API_URL + "todos";
 
     constructor(private http: Http) {
     }

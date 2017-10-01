@@ -24,7 +24,7 @@ the typescript. Unless made to do so by defining a userName variable within this
 <ul class="list-group" *ngIf="todos; else todosError">
     <li id="todos" *ngFor="let todo of this.filterTodos(todoCategory, todoStatus)" class="list-group-item">
         {{ todo.owner }} is in {{ todo.category }}
-        Status : {{todo.status}}
+        Status: {{todo.status}}
     </li>
 </ul>
 <!-- Maybe this should be a pop-up instead of just a text message? Not sure. -->

@@ -34,7 +34,7 @@ export class TodoListComponent implements OnInit {
 
     }
 
-    addNewTodo(owner: string, status: boolean, body : string, category : string) : void{
+    addNewTodo(owner: string, status: boolean, body : string, category : string): void{
 
         //Here we clear all the fields, there's probably a better way
         //of doing this could be with forms or something else
