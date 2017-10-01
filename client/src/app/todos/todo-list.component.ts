@@ -16,7 +16,7 @@ export class TodoListComponent implements OnInit {
     public filteredTodos: Todo[];
     private todoAddSuccess : Boolean = false;
 
-    public todoOwner : string;
+    public todoOwner : string = "";
     public todoStatus : string;
     public todoCategory: string;
     public newTodoOwner:string;
@@ -84,6 +84,27 @@ export class TodoListComponent implements OnInit {
      * Starts an asynchronous operation to update the users list
      *
      */
+    searchTodos(): Observable<Todo[]> {
+        let todos : Observable<Todo[]>;
+
+        if (this.todoOwner != ""){
+            console.log("owner specified");
+            let todos : Observable<Todo[]> = this.todoListService.getOwner(this.todoOwner);
+            todos.subscribe(
+                todos => {
+                    this.todos = todos;
+                    this.filterTodos(this.todoCategory, this.todoStatus);
+                },
+                err => {
+                    console.log(err);
+                });
+        }
+        else{
+            this.refreshTodos();
+        }
+        return todos;
+    }
+
     refreshTodos(): Observable<Todo[]> {
         //Get Users returns an Observable, basically a "promise" that
         //we will get the data from the server.
