@@ -84,6 +84,11 @@ export class TodoListComponent implements OnInit {
      * Starts an asynchronous operation to update the users list
      *
      */
+
+    todoCount(): number {
+        return this.filteredTodos.length;
+    }
+
     searchTodos(): Observable<Todo[]> {
         let todos : Observable<Todo[]>;
 

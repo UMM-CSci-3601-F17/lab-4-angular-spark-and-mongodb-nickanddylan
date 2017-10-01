@@ -35,8 +35,11 @@ the typescript. Unless made to do so by defining a userName variable within this
         <option id="true" value="true">Complete</option>
         <option id="false" value="false">Incomplete</option>
     </select>
+
  <!--   <button id="true-button" #input type="button" (click)="todoStatus = 'true'">Complete</button>
     <button id="false-button" #input type="button" (click)="todoStatus = 'false'">Incomplete</button> !-->
+    <hr>
+    Todos: <span class="badge">{{todoCount()}}</span>
 </span>
 
 <ul class="list-group" *ngIf="todos; else todosError">
