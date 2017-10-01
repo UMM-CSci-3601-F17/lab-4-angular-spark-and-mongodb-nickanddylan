@@ -18,7 +18,9 @@ the typescript. Unless made to do so by defining a userName variable within this
 <span id="title" class="list-group-item list-group-item-info">
     <span id="list-title"> Todo Owner </span>
     <input id="todoCategory" #input type="text" placeholder="Filter by category" (input)="todoCategory = $event.target.value">
-    <input id="todoStatus" #input type="number" placeholder="Filter by status" (input)="todoCategory = $event.target.value">
+    <input id="todoStatus" #input type="text" placeholder="Filter by status" (input)="todoCategory = $event.target.value">
+    <button id="todo-status" #input type="button" (click)="todoStatus = 'true'">Complete</button>
+    <button id="todo-status" #input type="button" (click)="todoStatus = 'false'">Incomplete</button>
 </span>
 
 <ul class="list-group" *ngIf="todos; else todosError">
