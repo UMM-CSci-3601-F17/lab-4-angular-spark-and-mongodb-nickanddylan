@@ -1,10 +1,12 @@
 Add a new Todo:
 <span class="row">
-    <span id="addUser" class="col-lg-5">
+    <span id="addTodo" class="col-lg-10">
         <span class="input-group">
             <input class="form-control" #input type="text" placeholder="Owner" [(ngModel)]="newTodoOwner">
-            <button id="new-true-button" #input type="button" (click)="newTodoStatus = true">Complete</button>
-            <button id="new-false-button" #input type="button" (click)="newTodoStatus = false">Incomplete</button>
+
+            <button [ngStyle]="{'background-color':newTodoStatus ? '#90CAF9' : 'white'}" class="form-control" id="new-true-button" #input type="button" (click)="newTodoStatus = true">Complete</button>
+            <button [ngStyle]="{'background-color':newTodoStatus ? 'white' : '#90CAF9'}" class="form-control" id="new-false-button" #input type="button" (click)="newTodoStatus = false;">Incomplete</button>
+
            <!-- <select class="form-control" #input-type="text" placeholder="Status" (input)="newTodoStatus=$event.target.value">
                 <option id="any-status" value="">Any status</option>
                 <option id="true" value="true">Complete</option>
