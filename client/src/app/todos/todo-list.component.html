@@ -1,0 +1,38 @@
+Add a new Todo:
+<span class="row">
+    <span id="addUser" class="col-lg-5">
+        <span class="input-group">
+            <input class="form-control" #input type="text" placeholder="Owner" [(ngModel)]="newTodoOwner">
+            <input class="form-control" #input type="text" placeholder="Status" [(ngModel)]="newTodoStatus">
+            <input class="form-control" #input type="text" placeholder="Body" [(ngModel)]="newTodoBody">
+            <input class="form-control" #input type="text" placeholder="Category" [(ngModel)]="newTodoCategory">
+
+            <button class="form-control" #input type="button" (click)="this.addNewTodo(newTodoOwner, newTodoStatus, newTodoCategory, newTodoBody)">Add Todo</button>
+        </span>
+    </span>
+</span>
+
+<!-- The names userName and userAge, different from searchName and searchAge, are being
+used here only to illustrate that these inputs are not necessarily explicitly referencable from within
+the typescript. Unless made to do so by defining a userName variable within this component's typescript file-->
+<span id="title" class="list-group-item list-group-item-info">
+    <span id="list-title"> Todo Owner </span>
+    <input id="todoCategory" #input type="text" placeholder="Filter by category" (input)="todoCategory = $event.target.value">
+    <input id="todoStatus" #input type="number" placeholder="Filter by status" (input)="todoCategory = $event.target.value">
+</span>
+
+<ul class="list-group" *ngIf="todos; else todosError">
+    <li id="todos" *ngFor="let todo of this.filterTodos(todoCategory, todoStatus)" class="list-group-item">
+        {{ todo.owner }} is in {{ todo.category }}
+        Status : {{todo.status}}
+    </li>
+</ul>
+<!-- Maybe this should be a pop-up instead of just a text message? Not sure. -->
+<ng-template #todosError>
+    <p>
+        There was a problem loading the todos. Possibly the server is down or perhaps there are network issues.
+    </p>
+    <p>
+        Please wait a bit and try again or start the server.
+    </p>
+</ng-template>
