@@ -87,7 +87,7 @@ export class TodoListComponent implements OnInit {
     searchTodos(): Observable<Todo[]> {
         let todos : Observable<Todo[]>;
 
-        if (this.todoOwner != ""){
+        if (this.todoOwner !== ""){
             console.log("owner specified");
             let todos : Observable<Todo[]> = this.todoListService.getOwner(this.todoOwner);
             todos.subscribe(
