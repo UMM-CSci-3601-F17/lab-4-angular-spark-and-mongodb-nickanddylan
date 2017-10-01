@@ -3,7 +3,14 @@ Add a new Todo:
     <span id="addUser" class="col-lg-5">
         <span class="input-group">
             <input class="form-control" #input type="text" placeholder="Owner" [(ngModel)]="newTodoOwner">
-            <input class="form-control" #input type="text" placeholder="Status" [(ngModel)]="newTodoStatus">
+            <button id="new-true-button" #input type="button" (click)="newTodoStatus = true">Complete</button>
+            <button id="new-false-button" #input type="button" (click)="newTodoStatus = false">Incomplete</button>
+           <!-- <select class="form-control" #input-type="text" placeholder="Status" (input)="newTodoStatus=$event.target.value">
+                <option id="any-status" value="">Any status</option>
+                <option id="true" value="true">Complete</option>
+                <option id="false" value="false">Incomplete</option>
+            </select> -->
+
             <input class="form-control" #input type="text" placeholder="Body" [(ngModel)]="newTodoBody">
             <input class="form-control" #input type="text" placeholder="Category" [(ngModel)]="newTodoCategory">
 
@@ -19,14 +26,14 @@ the typescript. Unless made to do so by defining a userName variable within this
     <span id="list-title"> Todo Owner </span>
     <input id="todoCategory" #input type="text" placeholder="Filter by category" (input)="todoCategory = $event.target.value">
     <input id="todoStatus" #input type="text" placeholder="Filter by status" (input)="todoCategory = $event.target.value">
-    <button id="todo-status" #input type="button" (click)="todoStatus = 'true'">Complete</button>
-    <button id="todo-status" #input type="button" (click)="todoStatus = 'false'">Incomplete</button>
+    <button id="true-button" #input type="button" (click)="todoStatus = 'true'">Complete</button>
+    <button id="false-button" #input type="button" (click)="todoStatus = 'false'">Incomplete</button>
 </span>
 
 <ul class="list-group" *ngIf="todos; else todosError">
     <li id="todos" *ngFor="let todo of this.filterTodos(todoCategory, todoStatus)" class="list-group-item">
         {{ todo.owner }} is in {{ todo.category }}
-        Status: {{todo.status}}
+        <p> Status: {{todo.status}} </p>
     </li>
 </ul>
 <!-- Maybe this should be a pop-up instead of just a text message? Not sure. -->

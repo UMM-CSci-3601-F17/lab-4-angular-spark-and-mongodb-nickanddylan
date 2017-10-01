@@ -209,10 +209,10 @@ public class TodoController {
     public boolean addNewTodo(String owner, boolean status, String body, String category) {
 
         Document newTodo = new Document();
-        newTodo.append("name", owner);
+        newTodo.append("owner", owner);
         newTodo.append("status", status);
-        newTodo.append("company", body);
-        newTodo.append("email", category);
+        newTodo.append("body", body);
+        newTodo.append("category", category);
 
         try {
             todoCollection.insertOne(newTodo);
