@@ -5,10 +5,7 @@ import com.mongodb.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Indexes;
-import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.*;
 import com.mongodb.util.JSON;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -156,17 +153,10 @@ public class TodoController {
 
         Iterable<Document> jsonTodos = todoCollection.aggregate(
             Arrays.asList(
-                Aggregates.project(
-                  Projections.fields(
-                      Projections.excludeId(),
-                      Projections.include("owner"),
-                      Projections.computed(
-                         "firstCategory",
-                         new Document("$arrayElemAt", Arrays.asList("$category", 0))
-                        )
-                    )
-                )
-            ));
+                Aggregates.match(Filters.eq("category", "groceries")),
+                Aggregates.group("$status", Accumulators.sum("count", 1))
+            )
+        );
         return JSON.serialize(jsonTodos);
     }
 

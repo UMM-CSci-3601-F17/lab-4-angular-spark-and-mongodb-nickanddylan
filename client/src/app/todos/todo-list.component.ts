@@ -13,16 +13,16 @@ import {Observable} from "rxjs";
 export class TodoListComponent implements OnInit {
     //These are public so that tests can reference them (.spec.ts)
     public todos: Todo[];
-    public filteredTodos: Todo[];
+    public filteredTodos: Todo[] = null;
     private todoAddSuccess : Boolean = false;
 
     public todoOwner : string = "";
     public todoStatus : string;
-    public todoCategory: string;
-    public newTodoOwner:string;
-    public newTodoStatus: boolean;
-    public newTodoBody: string;
-    public newTodoCategory: string;
+    public todoCategory: string = "";
+    public newTodoOwner:string = null;
+    public newTodoStatus: boolean = false;
+    public newTodoBody: string = null;
+    public newTodoCategory: string = null;
 
 
     //Inject the UserListService into this component.
@@ -35,7 +35,10 @@ export class TodoListComponent implements OnInit {
     }
 
     addNewTodo(owner: string, status: boolean, body : string, category : string): void{
-
+        if (this.newTodoOwner === null || this.newTodoBody === null || this.newTodoCategory === null){
+            alert("Please complete all fields.");
+        }
+        else {
         //Here we clear all the fields, there's probably a better way
         //of doing this could be with forms or something else
         this.newTodoOwner = null;
@@ -43,15 +46,17 @@ export class TodoListComponent implements OnInit {
         this.newTodoBody = null;
         this.newTodoCategory = null;
 
-        this.todoListService.addNewTodo(owner, status, body, category).subscribe(
-            succeeded => {
-                this.todoAddSuccess = succeeded;
-                // Once we added a new User, refresh our user list.
-                // There is a more efficient method where we request for
-                // this new user from the server and add it to users, but
-                // for this lab it's not necessary
-                this.refreshTodos();
-            });
+
+            this.todoListService.addNewTodo(owner, status, body, category).subscribe(
+                succeeded => {
+                    this.todoAddSuccess = succeeded;
+                    // Once we added a new User, refresh our user list.
+                    // There is a more efficient method where we request for
+                    // this new user from the server and add it to users, but
+                    // for this lab it's not necessary
+                    this.refreshTodos();
+                });
+        }
     }
 
 
@@ -86,6 +91,7 @@ export class TodoListComponent implements OnInit {
      */
 
     todoCount(): number {
+
         return this.filteredTodos.length;
     }
 

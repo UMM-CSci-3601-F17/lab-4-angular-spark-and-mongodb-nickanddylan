@@ -16,7 +16,7 @@ Add a new Todo:
             <input class="form-control" #input type="text" placeholder="Body" [(ngModel)]="newTodoBody">
             <input class="form-control" #input type="text" placeholder="Category" [(ngModel)]="newTodoCategory">
 
-            <button class="form-control" #input type="button" (click)="this.addNewTodo(newTodoOwner, newTodoStatus, newTodoCategory, newTodoBody)">Add Todo</button>
+            <button class="form-control" #input type="button" (click)="this.addNewTodo(newTodoOwner, newTodoStatus, newTodoBody, newTodoCategory)">Add Todo</button>
         </span>
     </span>
 </span>
@@ -39,7 +39,9 @@ the typescript. Unless made to do so by defining a userName variable within this
  <!--   <button id="true-button" #input type="button" (click)="todoStatus = 'true'">Complete</button>
     <button id="false-button" #input type="button" (click)="todoStatus = 'false'">Incomplete</button> !-->
     <hr>
-    Todos: <span class="badge">{{filteredTodos.length}}</span>
+
+        Todos: <span class="badge">{{todoCount()}}</span>
+
 </span>
 
 <ul class="list-group" *ngIf="todos; else todosError">
