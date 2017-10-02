@@ -39,12 +39,13 @@ the typescript. Unless made to do so by defining a userName variable within this
  <!--   <button id="true-button" #input type="button" (click)="todoStatus = 'true'">Complete</button>
     <button id="false-button" #input type="button" (click)="todoStatus = 'false'">Incomplete</button> !-->
     <hr>
-    Todos: <span class="badge">{{todoCount()}}</span>
+    Todos: <span class="badge">{{filteredTodos.length}}</span>
 </span>
 
 <ul class="list-group" *ngIf="todos; else todosError">
     <li id="todos" *ngFor="let todo of this.filterTodos(todoCategory, todoStatus)" class="list-group-item">
         {{ todo.owner }} is in {{ todo.category }}
+        <p>{{ todo.body}}</p>
         <p> Status: {{todo.status}} </p>
     </li>
 </ul>

@@ -25,7 +25,7 @@ public class TodoController {
     private final Gson gson;
     private MongoDatabase database;
     private final MongoCollection<Document> todoCollection;
-
+    private MongoCollection<Document> todoSummary;
     //Construct a controller for todos
     // including initializing the collection of todos from the DB
     public TodoController(MongoDatabase database) {
@@ -151,6 +151,31 @@ public class TodoController {
 
         return JSON.serialize(matchingTodos);
     }
+
+    public String todoSummary(Request req, Response res){
+
+        Iterable<Document> jsonTodos = todoCollection.aggregate(
+            Arrays.asList(
+                Aggregates.project(
+                  Projections.fields(
+                      Projections.excludeId(),
+                      Projections.include("owner"),
+                      Projections.computed(
+                         "firstCategory",
+                         new Document("$arrayElemAt", Arrays.asList("$category", 0))
+                        )
+                    )
+                )
+            ));
+        return JSON.serialize(jsonTodos);
+    }
+
+    Block<Document> printBlock = new Block<Document>() {
+        @Override
+        public void apply(final Document document) {
+            System.out.println(document.toJson());
+        }
+    };
 
     /**
      *
