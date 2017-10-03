@@ -110,7 +110,7 @@ public class TodoController {
         if (queryParams.containsKey("owner")) {
             String targetOwner = queryParams.get("owner")[0];
             filterDoc = filterDoc.append("owner", targetOwner);
-            //matchingTodos = todoCollection.find(filterDoc);
+            matchingTodos = todoCollection.find(filterDoc);
         }
         if (queryParams.containsKey("status")) {
             String targetStatus = queryParams.get("status")[0];
@@ -120,12 +120,12 @@ public class TodoController {
             else if (targetStatus.equals("incomplete")){
                 filterDoc = filterDoc.append("status", false);
             }
-            //matchingTodos = todoCollection.find(filterDoc);
+            matchingTodos = todoCollection.find(filterDoc);
         }
         if (queryParams.containsKey("category")) {
             String targetCategory = queryParams.get("category")[0];
             filterDoc = filterDoc.append("category", targetCategory);
-             //matchingTodos.todoCollection.find(filterDoc);
+             matchingTodos = todoCollection.find(filterDoc);
         }
         if (queryParams.containsKey("body")) {
             String targetBody = queryParams.get("body")[0];
@@ -153,16 +153,40 @@ public class TodoController {
 
 
     public String todoSummary(Request req, Response res){
-        Document document = new Document();
-        Iterable<Document> jsonTodos = todoCollection.aggregate(
-            Arrays.asList(
-                Aggregates.match(Filters.eq("status", true)),
-                Aggregates.group("$status", Accumulators.sum("number of ToDos complete", 1))
-            )
-        );
-        return JSON.serialize(jsonTodos);
-    }
 
+        Iterable<Document> jsonTodos = todoCollection.find();
+        ArrayList<Iterable<Document>> a = new ArrayList<>();
+        a.add(todoSummary(jsonTodos, "status"));
+        a.add(todoSummary(jsonTodos, "category"));
+        a.add(todoSummary(jsonTodos, "owner"));
+
+        return JSON.serialize(a);
+    }
+    public Iterable<Document> todoSummary(Iterable<Document> jsonTodos, String key){
+        String fieldName = "";
+        Float total = 1.0f;
+        Float inField = 1.0f;
+        if (key.equals("status")){
+            fieldName = "total";
+            jsonTodos = todoCollection.aggregate(
+                Arrays.asList(
+                    Aggregates.match(Filters.eq("status", true)),
+                    Aggregates.group("$"+key, Accumulators.sum("number of ToDos complete"+": "+fieldName, total))
+                )
+            );
+        }
+        else {
+            jsonTodos = todoCollection.aggregate(
+                Arrays.asList(
+                    Aggregates.match(Filters.eq("status", true)),
+                    Aggregates.group("$"+key, Accumulators.sum("number of ToDos complete", 1))
+
+                )
+            );
+        }
+
+        return jsonTodos;
+    }
 
 
     Block<Document> printBlock = new Block<Document>() {
