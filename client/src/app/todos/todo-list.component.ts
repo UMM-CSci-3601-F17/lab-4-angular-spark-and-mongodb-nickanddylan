@@ -100,8 +100,12 @@ export class TodoListComponent implements OnInit {
      */
 
     todoCount(): number {
-
-        return this.filteredTodos.length;
+        if (this.filteredTodos !== null) {
+            return this.filteredTodos.length;
+        }
+        else{
+            return 0;
+        }
     }
 
     searchTodos(): Observable<Todo[]> {
