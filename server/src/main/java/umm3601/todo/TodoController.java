@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import spark.Request;
 import spark.Response;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -109,7 +110,7 @@ public class TodoController {
         if (queryParams.containsKey("owner")) {
             String targetOwner = queryParams.get("owner")[0];
             filterDoc = filterDoc.append("owner", targetOwner);
-            matchingTodos = todoCollection.find(filterDoc);
+            //matchingTodos = todoCollection.find(filterDoc);
         }
         if (queryParams.containsKey("status")) {
             String targetStatus = queryParams.get("status")[0];
@@ -119,12 +120,12 @@ public class TodoController {
             else if (targetStatus.equals("incomplete")){
                 filterDoc = filterDoc.append("status", false);
             }
-            matchingTodos = todoCollection.find(filterDoc);
+            //matchingTodos = todoCollection.find(filterDoc);
         }
         if (queryParams.containsKey("category")) {
             String targetCategory = queryParams.get("category")[0];
             filterDoc = filterDoc.append("category", targetCategory);
-             matchingTodos = todoCollection.find(filterDoc);
+             //matchingTodos.todoCollection.find(filterDoc);
         }
         if (queryParams.containsKey("body")) {
             String targetBody = queryParams.get("body")[0];
@@ -140,25 +141,29 @@ public class TodoController {
                     )
                 )
             );
-            // matchingTodos = todoCollection.find();
-        }
 
+        }
+            //matchingTodos = todoCollection.find(filterDoc);
         //FindIterable comes from mongo, Document comes from Gson
         //FindIterable<Document> matchingTodos = todoCollection.find(filterDoc);
 
         return JSON.serialize(matchingTodos);
     }
 
-    public String todoSummary(Request req, Response res){
 
+
+    public String todoSummary(Request req, Response res){
+        Document document = new Document();
         Iterable<Document> jsonTodos = todoCollection.aggregate(
             Arrays.asList(
-                Aggregates.match(Filters.eq("category", "groceries")),
-                Aggregates.group("$status", Accumulators.sum("count", 1))
+                Aggregates.match(Filters.eq("status", true)),
+                Aggregates.group("$status", Accumulators.sum("number of ToDos complete", 1))
             )
         );
         return JSON.serialize(jsonTodos);
     }
+
+
 
     Block<Document> printBlock = new Block<Document>() {
         @Override

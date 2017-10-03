@@ -19,6 +19,7 @@ export class TodoListComponent implements OnInit {
     public todoOwner : string = "";
     public todoStatus : string;
     public todoCategory: string = "";
+    public todoContent: string = "";
     public newTodoOwner:string = null;
     public newTodoStatus: boolean = false;
     public newTodoBody: string = null;
@@ -61,7 +62,7 @@ export class TodoListComponent implements OnInit {
 
 
 
-    public filterTodos(searchCategory: string, searchStatus: string): Todo[] {
+    public filterTodos(searchCategory: string,searchContent: string , searchStatus: string): Todo[] {
 
         this.filteredTodos = this.todos;
 
@@ -71,6 +72,14 @@ export class TodoListComponent implements OnInit {
 
             this.filteredTodos = this.filteredTodos.filter(todo => {
                 return !searchCategory || todo.category.toLowerCase().indexOf(searchCategory) !== -1;
+            });
+        }
+        //Filter by content
+        if (searchContent != null) {
+            searchContent = searchContent.toLocaleLowerCase();
+
+            this.filteredTodos = this.filteredTodos.filter(todo => {
+                return !searchContent || todo.body.toLowerCase().indexOf(searchContent) !== -1;
             });
         }
 
@@ -104,7 +113,7 @@ export class TodoListComponent implements OnInit {
             todos.subscribe(
                 todos => {
                     this.todos = todos;
-                    this.filterTodos(this.todoCategory, this.todoStatus);
+                    this.filterTodos(this.todoCategory, this.todoContent, this.todoStatus);
                 },
                 err => {
                     console.log(err);
@@ -127,7 +136,7 @@ export class TodoListComponent implements OnInit {
         todos.subscribe(
             todos => {
                 this.todos = todos;
-                this.filterTodos(this.todoCategory, this.todoStatus);
+                this.filterTodos(this.todoCategory, this.todoContent, this.todoStatus);
             },
             err => {
                 console.log(err);
