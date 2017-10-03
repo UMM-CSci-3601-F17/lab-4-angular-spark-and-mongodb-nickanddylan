@@ -32,7 +32,7 @@ public class TodoControllerSpec {
         testTodos.add(Document.parse("{\n" +
             "                    owner: \"Jake\",\n" +
             "                    status: true,\n" +
-            "                    body: \"Find my children\",\n" +
+            "                    body: \"Find my children. The frogs took them\",\n" +
             "                    category: \"hands\"\n" +
             "                }"));
         testTodos.add(Document.parse("{\n" +
@@ -44,7 +44,7 @@ public class TodoControllerSpec {
         testTodos.add(Document.parse("{\n" +
             "                    owner: \"Amy\",\n" +
             "                    status: false,\n" +
-            "                    body: \"Frogs\",\n" +
+            "                    body: \"I just really like frogs\",\n" +
             "                    category: \"Frogs\"\n" +
             "                }"));
 
@@ -97,7 +97,7 @@ public class TodoControllerSpec {
             .map(TodoControllerSpec::getOwner)
             .sorted()
             .collect(Collectors.toList());
-        List<String> expectedOwners = Arrays.asList("Jake", "Sarah", "Amy", "Sam");
+        List<String> expectedOwners = Arrays.asList("Amy", "Jake", "Sam", "Sarah");
         assertEquals("Names should match", expectedOwners, owners);
     }
 
@@ -114,7 +114,7 @@ public class TodoControllerSpec {
             .map(TodoControllerSpec::getOwner)
             .sorted()
             .collect(Collectors.toList());
-        List<String> expectedOwners = Arrays.asList("Sarah", "Amy");
+        List<String> expectedOwners = Arrays.asList("Amy", "Sam");
         assertEquals("Owners should match", expectedOwners, names);
     }
 
@@ -123,6 +123,22 @@ public class TodoControllerSpec {
         String jsonResult = todoController.getTodo(samsId.toHexString());
         Document sam = Document.parse(jsonResult);
         assertEquals("Owner should match", "Sam", sam.get("owner"));
+    }
+
+    @Test
+    public void getBodiesThatIncludeFrogs(){
+        Map<String, String[]> argMap = new HashMap<>();
+        argMap.put("body", new String[] { "frogs" });
+        String jsonResult = todoController.getTodos(argMap);
+        BsonArray docs = parseJsonArray(jsonResult);
+        assertEquals("Should be 3 todos", 3, docs.size());
+        List<String> names = docs
+            .stream()
+            .map(TodoControllerSpec::getOwner)
+            .sorted()
+            .collect(Collectors.toList());
+        List<String> expectedOwners = Arrays.asList("Amy","Jake", "Sam");
+        assertEquals("Owners should match", expectedOwners, names);
     }
 
 }

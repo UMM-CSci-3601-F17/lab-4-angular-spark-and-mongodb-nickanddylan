@@ -5,16 +5,14 @@ import com.mongodb.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Indexes;
-import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.*;
 import com.mongodb.util.JSON;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import spark.Request;
 import spark.Response;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,7 +23,7 @@ public class TodoController {
     private final Gson gson;
     private MongoDatabase database;
     private final MongoCollection<Document> todoCollection;
-
+    private MongoCollection<Document> todoSummary;
     //Construct a controller for todos
     // including initializing the collection of todos from the DB
     public TodoController(MongoDatabase database) {
@@ -143,14 +141,60 @@ public class TodoController {
                     )
                 )
             );
-            // matchingTodos = todoCollection.find();
-        }
 
+        }
+            //matchingTodos = todoCollection.find(filterDoc);
         //FindIterable comes from mongo, Document comes from Gson
         //FindIterable<Document> matchingTodos = todoCollection.find(filterDoc);
 
         return JSON.serialize(matchingTodos);
     }
+
+
+
+    public String todoSummary(Request req, Response res){
+
+        Iterable<Document> jsonTodos = todoCollection.find();
+        ArrayList<Iterable<Document>> a = new ArrayList<>();
+        a.add(todoSummary(jsonTodos, "status"));
+        a.add(todoSummary(jsonTodos, "category"));
+        a.add(todoSummary(jsonTodos, "owner"));
+
+        return JSON.serialize(a);
+    }
+    public Iterable<Document> todoSummary(Iterable<Document> jsonTodos, String key){
+        String fieldName = "";
+        Float total = 1.0f;
+        Float inField = 1.0f;
+        if (key.equals("status")){
+            fieldName = "total";
+            jsonTodos = todoCollection.aggregate(
+                Arrays.asList(
+                    Aggregates.match(Filters.eq("status", true)),
+                    Aggregates.group("$"+key, Accumulators.sum("number of ToDos complete"+": "+fieldName, total))
+                )
+            );
+        }
+        else {
+            jsonTodos = todoCollection.aggregate(
+                Arrays.asList(
+                    Aggregates.match(Filters.eq("status", true)),
+                    Aggregates.group("$"+key, Accumulators.sum("number of ToDos complete", 1))
+
+                )
+            );
+        }
+
+        return jsonTodos;
+    }
+
+
+    Block<Document> printBlock = new Block<Document>() {
+        @Override
+        public void apply(final Document document) {
+            System.out.println(document.toJson());
+        }
+    };
 
     /**
      *
@@ -209,10 +253,10 @@ public class TodoController {
     public boolean addNewTodo(String owner, boolean status, String body, String category) {
 
         Document newTodo = new Document();
-        newTodo.append("name", owner);
+        newTodo.append("owner", owner);
         newTodo.append("status", status);
-        newTodo.append("company", body);
-        newTodo.append("email", category);
+        newTodo.append("body", body);
+        newTodo.append("category", category);
 
         try {
             todoCollection.insertOne(newTodo);
