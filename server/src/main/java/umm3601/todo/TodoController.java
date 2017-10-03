@@ -24,6 +24,7 @@ public class TodoController {
     private MongoDatabase database;
     private final MongoCollection<Document> todoCollection;
     private MongoCollection<Document> todoSummary;
+    private float total;
     //Construct a controller for todos
     // including initializing the collection of todos from the DB
     public TodoController(MongoDatabase database) {
@@ -164,8 +165,9 @@ public class TodoController {
     }
     public Iterable<Document> todoSummary(Iterable<Document> jsonTodos, String key){
         String fieldName = "";
-        Float total = 1.0f;
+        total = 1.0f;
         Float inField = 1.0f;
+
         if (key.equals("status")){
             fieldName = "total";
             jsonTodos = todoCollection.aggregate(
@@ -179,7 +181,7 @@ public class TodoController {
             jsonTodos = todoCollection.aggregate(
                 Arrays.asList(
                     Aggregates.match(Filters.eq("status", true)),
-                    Aggregates.group("$"+key, Accumulators.sum("number of ToDos complete", 1))
+                    Aggregates.group("$"+key, Accumulators.sum("number of ToDos complete", inField ))
 
                 )
             );
