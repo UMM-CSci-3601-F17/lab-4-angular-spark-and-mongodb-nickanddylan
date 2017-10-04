@@ -137,8 +137,10 @@ public class TodoController {
 
            // This had previously been done using aggregates. The problem with this is that it would cause
             // conflicts when used with multiple filters. This becomes a really big problem when I want to
-            // extend this functionality to the client-side. This way simply uses regex to filter
-            filterDoc = filterDoc.append("body", Pattern.compile(queryParams.get("contains")[0]));
+            // extend this functionality to the client-side. This way simply uses regex to filter.
+            // HUGE thanks to Paul, who helped me out with this.
+            filterDoc = filterDoc.append("body", Pattern.compile(queryParams.get("contains")[0],Pattern.CASE_INSENSITIVE));
+
             System.out.println(filterDoc);
 
 

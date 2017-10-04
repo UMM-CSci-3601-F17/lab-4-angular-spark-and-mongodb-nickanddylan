@@ -54,7 +54,7 @@ export class TodoPage {
 
 
     filterByContent(content: string) {
-        let input = element(by.id('content'));
+        let input = element(by.id('content-search'));
         input.click();
         input.sendKeys(content);
     }
@@ -82,4 +82,25 @@ export class TodoPage {
         let todo = element(by.id('subject-line')).getText();
         return todo;
     }
+
+    addTodo(owner:string,status:string,body:string,category:string) {
+        let ownerField = element(by.id("add-owner"));
+        let statusButton = element(by.id(status));
+        let bodyField = element(by.id("add-content"));
+        let categoryField = element(by.id("add-category"));
+        let addButton = element(by.id("make-todo"))
+        ownerField.click();
+        ownerField.sendKeys(owner);
+        statusButton.click();
+        bodyField.click();
+        bodyField.sendKeys(body);
+        categoryField.click();
+        categoryField.sendKeys(category);
+        addButton.click();
+    }
+    countTodosOnScreen(){
+        let todoList = element(by.id("todos"));
+
+    }
+
 }

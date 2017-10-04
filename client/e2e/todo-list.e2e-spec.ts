@@ -59,6 +59,7 @@ describe('angular-spark-lab', () => {
     it('Should only return todos that contain particular content', () => {
         page.navigateTo();
         page.filterByContent('Excepteur');
+        page.toggleSearch();
         expect(page.getFirstTodo()).toEqual("Blanche has not completed this homework task:")
     });
 
@@ -69,7 +70,7 @@ describe('angular-spark-lab', () => {
         page.typeAnOwner('Workman');
         page.typeACategory('software design');
         page.toggleSearch();
-        expect(page.getFirstTodo()).toEqual('Workman has completed this software design task:')
+        expect(page.getFirstTodo()).toEqual('Workman has completed this software design task:');
     });
 
     it('Should have an owner filter box', () => {
@@ -79,7 +80,7 @@ describe('angular-spark-lab', () => {
 
     it('Should have an content filter box', () => {
         page.navigateTo();
-        expect(page.getFilterInterface('content')).toEqual("")
+        expect(page.getFilterInterface('content-search')).toEqual("")
     });
 
     /*
@@ -98,4 +99,15 @@ describe('angular-spark-lab', () => {
         expect(page.getFilterInterface('load-button')).toEqual("Search");
 
     });
+
+    it('Should make a todo and then search that todo', () => {
+        page.navigateTo();
+        page.addTodo("Shrek", "new-true-button","GET OUT OF MY SWAMP", "Donkey");
+        page.typeAnOwner("Shrek");
+        page.toggleSearch();
+        expect(page.getFirstTodo()).toEqual('Shrek has completed this Donkey task:')
+    });
+
+
+
 });

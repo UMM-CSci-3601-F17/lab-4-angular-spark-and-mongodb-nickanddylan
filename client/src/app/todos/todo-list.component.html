@@ -7,7 +7,7 @@ Add a new Todo:
 <span class="row">
     <span id="addTodo" class="col-lg-10">
         <span class="input-group">
-            <input class="form-control" #input type="text" placeholder="Owner" [(ngModel)]="newTodoOwner">
+            <input id="add-owner" class="form-control" #input type="text" placeholder="Owner" [(ngModel)]="newTodoOwner">
 
             <button [ngStyle]="{'background-color':newTodoStatus ? '#90CAF9' : 'white'}" class="form-control" id="new-true-button" #input type="button" (click)="newTodoStatus = true">Complete</button>
             <button [ngStyle]="{'background-color':newTodoStatus ? 'white' : '#90CAF9'}" class="form-control" id="new-false-button" #input type="button" (click)="newTodoStatus = false;">Incomplete</button>
@@ -18,10 +18,10 @@ Add a new Todo:
                 <option id="false" value="false">Incomplete</option>
             </select> -->
 
-            <input class="form-control" #input type="text" placeholder="Body" [(ngModel)]="newTodoBody">
-            <input class="form-control" #input type="text" placeholder="Category" [(ngModel)]="newTodoCategory">
+            <input id="add-content" class="form-control" #input type="text" placeholder="Body" [(ngModel)]="newTodoBody">
+            <input id="add-category" class="form-control" #input type="text" placeholder="Category" [(ngModel)]="newTodoCategory">
 
-            <button class="form-control" #input type="button" (click)="this.addNewTodo(newTodoOwner, newTodoStatus, newTodoBody, newTodoCategory)">Add Todo</button>
+            <button id="make-todo" class="form-control" #input type="button" (click)="this.addNewTodo(newTodoOwner, newTodoStatus, newTodoBody, newTodoCategory)">Add Todo</button>
         </span>
     </span>
 </span>
@@ -53,7 +53,7 @@ the typescript. Unless made to do so by defining a userName variable within this
 </span>
 
 <ul class="list-group" *ngIf="todos; else todosError">
-    <li id="todos" *ngFor="let todo of this.filterTodos(todoCategory,  todoStatus)" class="list-group-item">
+    <li id="todos" [ngStyle]="{'background-color':todo.status ? 'lightgreen' : 'lightcoral'}" *ngFor="let todo of this.filterTodos(todoCategory,  todoStatus)" class="list-group-item">
         <p id="subject-line">{{ todo.owner }} has {{todo.status ? 'completed':'not completed'}} this {{ todo.category }} task:</p>
         <p id="bodyText">{{ todo.body}}</p>
 

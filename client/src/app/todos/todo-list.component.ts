@@ -20,10 +20,10 @@ export class TodoListComponent implements OnInit {
     public todoStatus : string;
     public todoCategory: string = "";
     public todoContent: string = "";
-    public newTodoOwner:string = null;
+    public newTodoOwner:string = "";
     public newTodoStatus: boolean = false;
-    public newTodoBody: string = null;
-    public newTodoCategory: string = null;
+    public newTodoBody: string = "";
+    public newTodoCategory: string = "";
 
 
     //Inject the UserListService into this component.
@@ -36,7 +36,7 @@ export class TodoListComponent implements OnInit {
     }
 
     addNewTodo(owner: string, status: boolean, body : string, category : string): void{
-        if (this.newTodoOwner === null || this.newTodoBody === null || this.newTodoCategory === null){
+        if (this.newTodoOwner === "" || this.newTodoBody === "" || this.newTodoCategory === ""){
             alert("Please complete all fields.");
         }
         else {
