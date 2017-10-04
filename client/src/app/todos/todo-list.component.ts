@@ -62,7 +62,7 @@ export class TodoListComponent implements OnInit {
 
 
 
-    public filterTodos(searchCategory: string,searchContent: string , searchStatus: string): Todo[] {
+    public filterTodos(searchCategory: string, searchStatus: string): Todo[] {
 
         this.filteredTodos = this.todos;
 
@@ -74,14 +74,7 @@ export class TodoListComponent implements OnInit {
                 return !searchCategory || todo.category.toLowerCase().indexOf(searchCategory) !== -1;
             });
         }
-        //Filter by content
-        if (searchContent != null) {
-            searchContent = searchContent.toLocaleLowerCase();
 
-            this.filteredTodos = this.filteredTodos.filter(todo => {
-                return !searchContent || todo.body.toLowerCase().indexOf(searchContent) !== -1;
-            });
-        }
 
         //Filter by status
         if (searchStatus != null) {
@@ -111,13 +104,13 @@ export class TodoListComponent implements OnInit {
     searchTodos(): Observable<Todo[]> {
         let todos : Observable<Todo[]>;
 
-        if (this.todoOwner !== ""){
-            console.log("owner specified");
-            let todos : Observable<Todo[]> = this.todoListService.getOwner(this.todoOwner);
+        if (this.todoOwner !== "" || this.todoContent !== ""){
+            console.log("query specified");
+            let todos : Observable<Todo[]> = this.todoListService.getQueries(this.todoOwner, this.todoContent);
             todos.subscribe(
                 todos => {
                     this.todos = todos;
-                    this.filterTodos(this.todoCategory, this.todoContent, this.todoStatus);
+                    this.filterTodos(this.todoCategory,  this.todoStatus);
                 },
                 err => {
                     console.log(err);
@@ -140,7 +133,7 @@ export class TodoListComponent implements OnInit {
         todos.subscribe(
             todos => {
                 this.todos = todos;
-                this.filterTodos(this.todoCategory, this.todoContent, this.todoStatus);
+                this.filterTodos(this.todoCategory,  this.todoStatus);
             },
             err => {
                 console.log(err);

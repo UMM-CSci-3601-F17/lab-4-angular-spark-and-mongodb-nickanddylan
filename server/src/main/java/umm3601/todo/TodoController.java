@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.exists;
 
 public class TodoController {
     private final Gson gson;
@@ -108,6 +110,7 @@ public class TodoController {
 
         Document filterDoc = new Document();
         Iterable<Document> matchingTodos = todoCollection.find(filterDoc);
+
         if (queryParams.containsKey("owner")) {
             String targetOwner = queryParams.get("owner")[0];
             filterDoc = filterDoc.append("owner", targetOwner);
@@ -128,23 +131,30 @@ public class TodoController {
             filterDoc = filterDoc.append("category", targetCategory);
              matchingTodos = todoCollection.find(filterDoc);
         }
-        if (queryParams.containsKey("body")) {
-            String targetBody = queryParams.get("body")[0];
-            filterDoc = filterDoc.append("body", targetBody);
-
-            System.err.println("The target string is <" + targetBody + ">");
+        // Uses aggregates
+        if (queryParams.containsKey("contains")) {
 
 
-            matchingTodos = todoCollection.aggregate(
+           // This had previously been done using aggregates. The problem with this is that it would cause
+            // conflicts when used with multiple filters. This becomes a really big problem when I want to
+            // extend this functionality to the client-side. This way simply uses regex to filter
+            filterDoc = filterDoc.append("body", Pattern.compile(queryParams.get("contains")[0]));
+            System.out.println(filterDoc);
+
+
+
+            /*matchingTodos = todoCollection.aggregate(
                 Arrays.asList(
                     Aggregates.match(
                         Filters.text(targetBody)
                     )
                 )
-            );
+            );*/
+
 
         }
-            //matchingTodos = todoCollection.find(filterDoc);
+
+            matchingTodos = todoCollection.find(filterDoc);
         //FindIterable comes from mongo, Document comes from Gson
         //FindIterable<Document> matchingTodos = todoCollection.find(filterDoc);
 
@@ -172,19 +182,21 @@ public class TodoController {
             fieldName = "total";
             jsonTodos = todoCollection.aggregate(
                 Arrays.asList(
-                    Aggregates.match(Filters.eq("status", true)),
-                    Aggregates.group("$"+key, Accumulators.sum("number of ToDos complete"+": "+fieldName, total))
+
+                    Aggregates.group("$"+key, Accumulators.sum("number of ToDos by status", total))
                 )
             );
         }
         else {
             jsonTodos = todoCollection.aggregate(
                 Arrays.asList(
-                    Aggregates.match(Filters.eq("status", true)),
-                    Aggregates.group("$"+key, Accumulators.sum("number of ToDos complete", inField ))
+
+                    Aggregates.group("$"+key, Accumulators.sum("total", inField ),Accumulators.sum("complete", new Document("$cond", Arrays.asList("$status", 1, 0)))
 
                 )
-            );
+            ));
+
+
         }
 
         return jsonTodos;

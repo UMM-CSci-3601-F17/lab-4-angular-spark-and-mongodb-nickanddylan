@@ -21,9 +21,15 @@ export class TodoListService {
         let observable: Observable<any> = this.http.request(this.todoUrl);
         return observable.map(res => res.json());
     }
-    getOwner(owner: string): Observable<Todo[]>{
-        console.log("getting owner...")
-        this.todoUrl= environment.API_URL + "todos?owner="+owner;
+    getQueries(owner: string, content: string): Observable<Todo[]>{
+        console.log("getting stuff...");
+        if(content !== "" && owner === ""){
+            this.todoUrl= environment.API_URL + "todos?contains="+content;
+        }
+        if(owner !== "" && content === "") {
+            this.todoUrl = environment.API_URL + "todos?owner=" + owner;
+        }
+
         let observable: Observable<any> = this.http.request(this.todoUrl);
         return observable.map(res => res.json());
     }
