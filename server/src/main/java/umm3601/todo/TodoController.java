@@ -166,19 +166,23 @@ public class TodoController {
     public String todoSummary(Request req, Response res){
 
         Iterable<Document> jsonTodos = todoCollection.find();
-        ArrayList<Iterable<Document>> a = new ArrayList<>();
-        a.add(todoSummary(jsonTodos, "status"));
-        a.add(todoSummary(jsonTodos, "category"));
-        a.add(todoSummary(jsonTodos, "owner"));
+        Document allSummaries = new Document();
+        Iterable<Document> totalAmount = todoSummary(jsonTodos,null);
+        Iterable<Document> categories = todoSummary(jsonTodos,"category");
+        Iterable<Document> owners = todoSummary(jsonTodos,"owner");
 
-        return JSON.serialize(a);
+
+        allSummaries.append("complete todos", totalAmount);
+        allSummaries.append("categories", categories);
+        allSummaries.append("owners", owners);
+        return JSON.serialize(allSummaries);
     }
     public Iterable<Document> todoSummary(Iterable<Document> jsonTodos, String key){
         String fieldName = "";
         total = 1.0f;
         Float inField = 1.0f;
 
-        if (key.equals("status")){
+       /* if (key.equals("status")){
             fieldName = "total";
             jsonTodos = todoCollection.aggregate(
                 Arrays.asList(
@@ -186,8 +190,8 @@ public class TodoController {
                     Aggregates.group("$"+key, Accumulators.sum("number of ToDos by status", total))
                 )
             );
-        }
-        else {
+        }*/
+        //else {
             jsonTodos = todoCollection.aggregate(
                 Arrays.asList(
 
@@ -197,7 +201,7 @@ public class TodoController {
             ));
 
 
-        }
+       // }
 
         return jsonTodos;
     }

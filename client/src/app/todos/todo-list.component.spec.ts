@@ -80,16 +80,7 @@ describe("Todo list", () => {
         expect(todoList.todos.filter((todo: Todo) => todo.status === false).length).toBe(2);
     });
 
-    it("todo list filters by body", () => {
-        expect(todoList.filteredTodos.length).toBe(3);
-        todoList.todoContent = "M";
-        let a : Observable<Todo[]> = todoList.refreshTodos();
-        a.do(x => Observable.of(x))
-            .subscribe(x =>
-            {
-                expect(todoList.filteredTodos.length).toBe(2);
-            });
-    });
+
 
     it("todo list filters by status", () => {
         expect(todoList.filteredTodos.length).toBe(3);

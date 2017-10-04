@@ -55,9 +55,7 @@ export class UserListComponent implements OnInit {
     }
 
 
-
     public filterUsers(searchName: string, searchAge: number): User[] {
-
         this.filteredUsers = this.users;
 
         //Filter by name
@@ -99,6 +97,7 @@ export class UserListComponent implements OnInit {
             err => {
                 console.log(err);
             });
+
         return users;
     }
 
