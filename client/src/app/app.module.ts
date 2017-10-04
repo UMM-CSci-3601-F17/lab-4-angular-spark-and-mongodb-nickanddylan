@@ -14,6 +14,7 @@ import {TodoListComponent} from "./todos/todo-list.component";
 import {TodoListService} from "./todos/todo-list.service";
 
 
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -28,7 +29,8 @@ import {TodoListService} from "./todos/todo-list.service";
         NavbarComponent,
         UserListComponent,
         UserComponent,
-        TodoListComponent
+        TodoListComponent,
+
     ],
     providers: [
         UserListService,

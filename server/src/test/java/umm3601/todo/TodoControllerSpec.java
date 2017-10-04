@@ -128,7 +128,7 @@ public class TodoControllerSpec {
     @Test
     public void getBodiesThatIncludeFrogs(){
         Map<String, String[]> argMap = new HashMap<>();
-        argMap.put("body", new String[] { "frogs" });
+        argMap.put("contains", new String[] { "frogs" });
         String jsonResult = todoController.getTodos(argMap);
         BsonArray docs = parseJsonArray(jsonResult);
         assertEquals("Should be 3 todos", 3, docs.size());
