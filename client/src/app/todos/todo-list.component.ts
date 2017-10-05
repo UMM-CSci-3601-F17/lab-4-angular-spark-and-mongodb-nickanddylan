@@ -56,7 +56,7 @@ export class TodoListComponent implements OnInit {
         this.newTodoStatus = null;
         this.newTodoBody = null;
         this.newTodoCategory = null;
-        this.categories.push(category);
+        //this.categories.push(category);
 
             this.todoListService.addNewTodo(owner, status, body, category).subscribe(
                 succeeded => {
