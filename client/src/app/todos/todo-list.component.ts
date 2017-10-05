@@ -10,6 +10,14 @@ import {Observable} from "rxjs";
     providers: []
 })
 
+@Component({
+    selector: 'dynamic-dropdown',
+    template: `
+        
+    
+    `
+})
+
 export class TodoListComponent implements OnInit {
     //These are public so that tests can reference them (.spec.ts)
     public todos: Todo[];
@@ -20,10 +28,12 @@ export class TodoListComponent implements OnInit {
     public todoStatus : string;
     public todoCategory: string = "";
     public todoContent: string = "";
+    public categories: string[] = [];
     public newTodoOwner:string = "";
     public newTodoStatus: boolean = false;
     public newTodoBody: string = "";
     public newTodoCategory: string = "";
+
 
 
     //Inject the UserListService into this component.
@@ -46,7 +56,7 @@ export class TodoListComponent implements OnInit {
         this.newTodoStatus = null;
         this.newTodoBody = null;
         this.newTodoCategory = null;
-
+        this.categories.push(category);
 
             this.todoListService.addNewTodo(owner, status, body, category).subscribe(
                 succeeded => {
@@ -92,6 +102,19 @@ export class TodoListComponent implements OnInit {
      *
      */
 
+    categoryDropdown(): string[]{
+        if (this.filteredTodos !== null){
+            var i:number;
+            for(i=0;i<this.filteredTodos.length;i++){
+                if(this.categories.indexOf(this.filteredTodos[i].category)==-1){
+                    console.log("adding category");
+                    this.categories.push(this.todos[i].category);
+                }
+            }
+        }
+        return this.categories;
+    }
+
     todoCount(): number {
         if (this.filteredTodos !== null) {
             return this.filteredTodos.length;
@@ -134,6 +157,7 @@ export class TodoListComponent implements OnInit {
             todos => {
                 this.todos = todos;
                 this.filterTodos(this.todoCategory,  this.todoStatus);
+
             },
             err => {
                 console.log(err);
@@ -143,5 +167,6 @@ export class TodoListComponent implements OnInit {
 
     ngOnInit(): void {
         this.refreshTodos();
+        this.categoryDropdown()
     }
 }

@@ -22,25 +22,25 @@ describe('angular-spark-lab', () => {
 
     it('Should select a category and check that it returned correct element', () => {
         page.navigateTo();
-        page.typeACategory('homework');
+        page.grabACategory('homework');
         expect(page.getFirstTodo()).toEqual("Fry has completed this homework task:");
     });
 
     it('Should select a category and check that it returned correct element', () => {
         page.navigateTo();
-        page.typeACategory('software design');
+        page.grabACategory('software design');
         expect(page.getFirstTodo()).toEqual("Blanche has not completed this software design task:");
     });
 
     it('Should select a category and check that it returned correct element', () => {
         page.navigateTo();
-        page.typeACategory('groceries');
+        page.grabACategory('groceries');
         expect(page.getFirstTodo()).toEqual("Blanche has completed this groceries task:");
     });
 
     it('Should select a category and check that it returned correct element', () => {
         page.navigateTo();
-        page.typeACategory('video games');
+        page.grabACategory('video games');
         expect(page.getFirstTodo()).toEqual("Fry has not completed this video games task:");
     });
 
@@ -68,7 +68,7 @@ describe('angular-spark-lab', () => {
         page.filterByContent('velit');
         page.selectStatus('Complete');
         page.typeAnOwner('Workman');
-        page.typeACategory('software design');
+        page.grabACategory('software design');
         page.toggleSearch();
         expect(page.getFirstTodo()).toEqual('Workman has completed this software design task:');
     });
@@ -104,6 +104,7 @@ describe('angular-spark-lab', () => {
         page.navigateTo();
         page.addTodo("Shrek", "new-true-button","GET OUT OF MY SWAMP", "Donkey");
         page.typeAnOwner("Shrek");
+        page.grabACategory("Donkey");
         page.toggleSearch();
         expect(page.getFirstTodo()).toEqual('Shrek has completed this Donkey task:')
     });

@@ -38,10 +38,12 @@ export class TodoPage {
     We credit Ethan again with helping us to get the end to end
     testing to recognize when a filter has been selected from a dropdown.
      */
-    typeACategory(category: string) {
+    grabACategory(category: string) {
         let input = element(by.id('categories'));
         input.click();
         input.sendKeys(category);
+        this.pressEnter();
+        this.toggleSearch();
 
     }
 
